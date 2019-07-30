@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>userlist</title>
+<script type="text/javascript"> </script>
+
+</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<link rel="stylesheet" href="uploads/min.css">
+<link rel="stylesheet" href="uploads/rathi.css">
+<link rel="stylesheet" href="uploads/w3.css">
+<style>
+body {
+  
+}
+.container {
+  border: 2px solid #dedede;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  
+  margin: 10px 0;
+}
+.container p{word-wrap: break-word;}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+  align:right;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  max-height:60px;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+
+.frame{
+
+ max-width: 800px;
+     margin: auto;
+    -ms-flex: 60%; /* IE10 */
+    flex: 60%;
+    background-color: white;
+   
+    
+    
+}
+
+
+input[type=text], select {
+ width: 100%;
+  padding: 12px 60px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#bord{
+background-color:lightgrey;
+ 
+  margin:0px 0px 0px;
+    position: sticky; 
+    bottom:0;
+    width:100%;
+    overflow:hidden;
+     
+    border-radius: 4px;
+    padding:4px;
+ 
+}
+#bord textarea{
+width: 60%;
+  padding: 5px 10px;
+  display: inline-block;
+  
+  float:left;
+  
+}
+
+#bord button[type=button]{
+float:left;
+
+}
+#demos {   
+     max-width: 800px;
+     margin: auto;
+    -ms-flex: 60%; /* IE10 */
+    flex: 60%;
+    background-color: white;
+    padding: 20px;
+}
+
+@media screen and (max-width: 700px) {
+    .frame {   
+        flex-direction: column;
+    }
+}
+</style>
+<body align="center">
+<div class="row">
+<div class="main">
+<div class="container" style="position:sticky;top:0;min-width:100%;">
+<img src="uploads/<%=dp%>" alt="Avatar" style="width:100%;">
+<p align="left" ><%=email%></p></div>
+<div id="demos">
+<%for (var i=0;i<thingVar.length;i++){%>
+<%if(thingVar[i].useremail==email){%>
+<%if(thingVar[i].sr=='0'){%>
+<p align="right"><%=thingVar[i].message%></p>
+<%}%>
+<%if(thingVar[i].sr=='1'){%>
+<p align="left"><%=thingVar[i].message%></p>
+<%}%>
+<%}%>
+<%}%></div>
+<div id="bord">
+<div id="bound">
+<textarea name="message" id ="message" rows="1" cols="16"></textarea></div>
+<button type="button" onclick="send('<%=email%>','<%=usermail%>')"  >send</button>
+</div></div>
+</div>
+
+
+
+
+<button type="hidden" onclick="loadDoc('<%=usermail%>','<%=email%>')" id="refresh" ></button>
+
+
+
+<script>
+window.onload=function(){
+setInterval(alertFunc, 300);}
+function alertFunc() {
+  document.getElementById("refresh").click();
+}
+function loadDoc(data,email,success) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+     
+      var myObj = JSON.parse(this.responseText);var z=" ";
+      for(var i=0;i<myObj.length;i++)
+{if(myObj[i].useremail==email)
+{if(myObj[i].sr==0)
+{z=z+"<div class='container darker'><p align='right'><font >"+myObj[i].message+"</font></p></div>"+"<br>";}
+if(myObj[i].sr==1)
+{z=z+"<div class='container'><p align='left'><font >"+myObj[i].message+"</font></p></div>"+"<br>";}
+}
+}
+      document.getElementById("demos").innerHTML =
+      z ;
+      
+       success(this.responseText);
+    }
+  };
+  xhttp.open("post", "/chats/?p1="+data, true);
+  
+  xhttp.send();
+  return xhttp;
+}
+
+function send(email,usermail,success){
+    var xhttp=new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+
+success(this.responseText);}};
+var ms=document.getElementById('message').value;
+document.getElementById('bound').innerHTML="<textarea name='message' id ='message' rows='3' cols='50'></textarea>";
+xhttp.open("post", "/chatinsertr/?email="+email+"&useremaill="+usermail+"&message="+ms, true);
+  
+  xhttp.send();
+  return xhttp;
+
+}
+
+
+</script>
+
+
+</body>
+</html>

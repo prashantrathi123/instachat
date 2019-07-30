@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>userlist</title></head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<link rel="stylesheet" href="uploads/min.css">
+<link rel="stylesheet" href="uploads/rathi.css">
+<link rel="stylesheet" href="uploads/w3.css">
+<style>
+
+.frame{
+background-color:white;
+max-width: 800px;
+     margin: auto;
+    -ms-flex: 60%; /* IE10 */
+    flex: 60%;
+    
+    padding: 60px;
+}
+.main input[type=submit] {
+  width: 100%;
+  background-color: lighgrey;
+  color: black;
+  padding: 14px 20px;
+  height:50px;
+  
+  margin: 8px 0;
+  border: solid 1px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#button{
+overflow:hidden;
+background-color:black;
+width:100%;
+display:inline-block;
+}
+#button input[type=submit]
+{
+float:left;
+display:inline-block;
+margin:0;
+}
+#button input[type=button]
+{
+float:left;
+display:inline-block;
+margin:0;
+}
+
+</style>
+<body>
+ <div id="navbar"> 
+<a href="signin.html">logout</a> 
+<form action = "/userlist" enctype="multipart/form-data" method = "POST">
+          <input type = "hidden"  value="<%=mainemail%>" name = "utable">
+          <input type = "hidden"  value="<%=dp%>" name = "dp">
+          <input type = "submit" value = "search friends" class="w3-button w3-black">
+      </form>
+<form action = "/chatl" enctype="multipart/form-data" method = "POST">
+         <input type = "hidden" name = "uutablee" value="<%=mainemail%>"> 
+         <input type = "hidden"  value="<%=mainemail%>" name = "uutable">
+         <input type = "submit" value = "chat"class="w3-button w3-black">
+      </form>
+<form action = "/wall" enctype="multipart/form-data" method = "POST">
+         <input type = "hidden" name = "uemail" value="<%=mainemail%>"> 
+         <input type = "hidden"  value="<%=dp%>" name = "dp">
+         <input type = "submit" value = "wall"class="w3-button w3-black">
+      </form>
+<form action = "/photogallery" enctype="multipart/form-data" method = "POST">
+         <input type = "hidden" name = "uemail" value="<%=mainemail%>"> 
+         <input type = "hidden"  value="<%=dp%>" name = "dp">
+         <input type = "submit" value = "gallery"class="w3-button w3-black">
+      </form>
+ </div> 
+
+<div class="row">
+<div class="main">
+<form> 
+Search user: <input type="text" onkeyup="showHint(this.value)">
+</form>
+<p>Suggestions: <p id="txtHint"></p></p>
+
+<input type="hidden" value="<%=dp%>" name="dp" id="dp" >
+<input type="hidden" value="<%=mainemail%>" name="m" id="m">
+<%for (var i=0;i<thingvar.length;i++){%>
+<img src="uploads/<%=thingvar[i].fpath%>" width="18%" radius="50%" float="left">
+<form action="/userprofile" method="POST">
+<input type="hidden" value="<%=thingvar[i].email%>" name="emaill">
+<input type="hidden" value="<%=dp%>" name="dp"  >
+<input type="hidden" value="<%=mainemail%>" name="m" >
+<input type="submit" value="<%=thingvar[i].email%>">
+</form>
+<%}%></div>
+
+
+
+<script>
+function showHint(str) {
+    if (str.length == 0) { 
+        document.getElementById("txtHint").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+     var myObj = JSON.parse(this.responseText);var z=" ";
+var dp=document.getElementById("dp").value;
+var mainemail=document.getElementById("m").value;
+      for(var i=0;i<myObj.length;i++)
+{
+
+z=z+"<font >"+"<img src='uploads/'+"+myObj[i].fpath+" width='18%' radius='50%' float='left'><form action='/userprofile' method='POST'><input type='hidden' value="+myObj[i].email+" name='emaill'><input type='hidden' value="+dp+" name='dp' ><input type='hidden' value="+mainemail+" name='m' ><input type='submit' value="+myObj[i].email+"></form>"+"</font>"+" <br>";
+
+
+
+}
+
+
+                document.getElementById("txtHint").innerHTML = z;
+            }
+        };
+        xmlhttp.open("GET", "/hint?p1=" + str, true);
+        xmlhttp.send();
+    }
+}
+</script></div></body>
+</html>

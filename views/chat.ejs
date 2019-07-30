@@ -1,0 +1,143 @@
+<html>
+<head>
+<title>userlist</title>
+</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<link rel="stylesheet" href="uploads/min.css">
+<link rel="stylesheet" href="uploads/rathi.css">
+<link rel="stylesheet" href="uploads/w3.css">
+<style>
+.container {
+  border: 2px solid #dedede;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  
+  margin: 10px 0;
+}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+  align:right;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  max-height:60px;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+input[type=submit] {
+  width: 100%;
+  background-color: lighgrey;
+  color: black;
+  //padding: 14px 20px;
+  height:50px;
+  
+  margin: 8px 0;
+  border: solid 1px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.frame{
+background-color:white;
+max-width: 800px;
+     margin: auto;
+    -ms-flex: 60%; /* IE10 */
+    flex: 60%;
+    
+    padding: 60px;
+}
+.box{
+border:solid 1px;
+
+}
+</style>
+<body>
+<div class="row">
+<div class="main">
+<form> 
+Search user: <input type="text" onkeyup="showHint(this.value)">
+</form>
+<p>Suggestions: <span id="txtHint"></span></p>
+
+<input type="hidden" value="<%=email%>" name="useremail" id="userid">
+
+<h1>users list</h1>
+<%for (var i=0;i<thingVar.length;i++){%>
+<div class="container">
+<img src="uploads/<%=thingVar[i].fpath%>" style="width:100%;"  alt="Avatar">
+<form action="/chat" method="POST">
+<input type="hidden" value="<%=thingVar[i].email%>" name="emaill">
+<input type="hidden" value="<%=email%>" name="useremail">
+<input type="hidden" value="<%=thingVar[i].fpath%>" name="dp">
+<input type="submit" value="<%=thingVar[i].email%>">
+
+</form>
+</div><br>
+<%}%>
+</div></div>
+</body>
+
+<script>
+function showHint(str) {
+    if (str.length == 0) { 
+        document.getElementById("txtHint").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+     var myObj = JSON.parse(this.responseText);var z=" ";
+      for(var i=0;i<myObj.length;i++)
+{
+
+var uem=document.getElementById("userid").value;
+var ob=myObj[i].email;
+z=z+"<font >"+"<form action='/chat' method='POST'><input type='hidden' value="+myObj[i].email+" name='emaill'><input type='hidden' value="+uem+" name='useremail'><input type='submit' value="+myObj[i].email+"></form>"+"</font>"+" <br>";
+
+
+
+}
+
+
+                document.getElementById("txtHint").innerHTML = z;
+            }
+        };
+        xmlhttp.open("GET", "/hint?p1=" + str, true);
+        xmlhttp.send();
+    }
+}
+</script>
+
+
+</html>
